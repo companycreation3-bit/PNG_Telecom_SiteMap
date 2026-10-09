@@ -53,8 +53,17 @@
             width: 100%;
             max-width: 430px;
             position: relative;
-        }
+            margine-right: auto;
+            margine-left: 5%;
 
+            /* Keep the login centered on mobile */
+            @media (max-width: 480px) {
+                .login-container { 
+                    margin-left: auto; 
+                    margin-right: auto;
+                    } 
+                }
+      
         /* GLASS LOGIN CARD */
         .login-card {
             position: relative;
