@@ -1,3769 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>PNG Digital Telecom Site Map</title>
-
-<!-- Leaflet CSS -->
-<link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
-
-<style>
-
-*{
-    box-sizing:border-box;
-}
-
-html, body{
-    margin:0;
-    padding:0;
-    width:100%;
-    height:100%;
-    font-family:Arial,Helvetica,sans-serif;
-    overflow:hidden;
-}
-
-/* ================= HEADER ================= */
-
-.header{
-    height:65px;
-    background:#c40000;
-    color:white;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    padding:0 20px;
-    position:relative;
-    z-index:1000;
-    box-shadow:0 2px 8px rgba(0,0,0,.35);
-}
-
-.header-left{
-    display:flex;
-    align-items:center;
-    gap:12px;
-}
-
-.logo{
-    width:42px;
-    height:42px;
-    background:white;
-    color:#c40000;
-    border-radius:8px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:20px;
-    font-weight:bold;
-}
-
-.title{
-    font-size:20px;
-    font-weight:bold;
-}
-
-.subtitle{
-    font-size:11px;
-    opacity:.9;
-}
-
-.header-buttons{
-    display:flex;
-    gap:8px;
-}
-
-.header-buttons button{
-    border:none;
-    padding:9px 13px;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.btn-white{
-    background:white;
-    color:#c40000;
-}
-
-.btn-dark{
-    background:#222;
-    color:white;
-}
-
-/* ================= MAP ================= */
-
-#map{
-    position:absolute;
-    top:65px;
-    left:0;
-    right:0;
-    bottom:0;
-    z-index:1;
-}
-
-/* =========================================================
-   PROFESSIONAL GLASS SITE MANAGEMENT PANEL
-========================================================= */
-
-.panel{
-    position:absolute;
-    top:82px;
-    left:18px;
-    width:355px;
-    max-height:calc(100vh - 105px);
-    overflow-y:auto;
-
-    /* Glass effect */
-    background:rgba(255,255,255,0.78);
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,0.65);
-
-    border-radius:18px;
-
-    box-shadow:
-        0 12px 40px rgba(0,0,0,0.25),
-        inset 0 1px 0 rgba(255,255,255,0.8);
-
-    z-index:900;
-
-    color:#1d1d1f;
-}
-
-
-/* =========================================================
-   PANEL HEADER
-========================================================= */
-
-.panel-header{
-
-    position:relative;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(196,0,0,0.96),
-            rgba(145,0,0,0.92)
-        );
-
-    color:white;
-
-    padding:17px 18px;
-
-    font-size:14px;
-    font-weight:800;
-
-    letter-spacing:.8px;
-
-    border-radius:18px 18px 0 0;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    box-shadow:
-        0 4px 15px rgba(196,0,0,.25);
-}
-
-
-/* small status indicator */
-
-.panel-header::after{
-
-    content:"";
-
-    width:9px;
-    height:9px;
-
-    background:#4cff8f;
-
-    border-radius:50%;
-
-    box-shadow:
-        0 0 0 4px rgba(76,255,143,.18),
-        0 0 10px rgba(76,255,143,.8);
-
-}
-
-
-/* =========================================================
-   PANEL BODY
-========================================================= */
-
-.panel-body{
-
-    padding:15px;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.32),
-            rgba(255,255,255,.12)
-        );
-
-}
-
-
-/* =========================================================
-   SEARCH BOX
-========================================================= */
-
-.search{
-
-    width:100%;
-
-    padding:12px 14px;
-
-    border:1px solid rgba(0,0,0,.12);
-
-    border-radius:11px;
-
-    background:rgba(255,255,255,.82);
-
-    color:#222;
-
-    font-size:13px;
-
-    outline:none;
-
-    margin-bottom:10px;
-
-    box-shadow:
-        inset 0 1px 3px rgba(0,0,0,.05),
-        0 2px 8px rgba(0,0,0,.05);
-
-    transition:.2s ease;
-}
-
-
-.search::placeholder{
-
-    color:#777;
-
-}
-
-
-.search:focus{
-
-    border-color:#c40000;
-
-    background:white;
-
-    box-shadow:
-        0 0 0 3px rgba(196,0,0,.10),
-        0 4px 12px rgba(0,0,0,.08);
-
-}
-
-
-/* =========================================================
-   PROVINCE FILTER
-========================================================= */
-
-.panel select{
-
-    width:100%;
-
-    padding:11px 12px;
-
-    border:1px solid rgba(0,0,0,.12);
-
-    border-radius:11px;
-
-    margin-bottom:10px;
-
-    background:rgba(255,255,255,.82);
-
-    color:#222;
-
-    font-size:13px;
-
-    outline:none;
-
-    cursor:pointer;
-
-    box-shadow:
-        0 2px 8px rgba(0,0,0,.05);
-
-    transition:.2s ease;
-}
-
-
-.panel select:focus{
-
-    border-color:#c40000;
-
-    box-shadow:
-        0 0 0 3px rgba(196,0,0,.10);
-
-}
-
-
-/* =========================================================
-   ACTION BUTTONS
-========================================================= */
-
-.action-grid{
-
-    display:grid;
-
-    grid-template-columns:1fr 1fr;
-
-    gap:9px;
-
-    margin-top:5px;
-}
-
-
-.action-grid button{
-
-    position:relative;
-
-    padding:11px 8px;
-
-    border:none;
-
-    border-radius:11px;
-
-    cursor:pointer;
-
-    font-size:11px;
-
-    font-weight:800;
-
-    letter-spacing:.2px;
-
-    transition:
-        transform .18s ease,
-        box-shadow .18s ease,
-        filter .18s ease;
-
-    box-shadow:
-        0 4px 10px rgba(0,0,0,.12);
-}
-
-
-.action-grid button:hover{
-
-    transform:translateY(-2px);
-
-    filter:brightness(1.05);
-
-    box-shadow:
-        0 7px 16px rgba(0,0,0,.18);
-
-}
-
-
-.action-grid button:active{
-
-    transform:translateY(0);
-
-}
-
-
-/* ADD */
-
-.add-btn{
-
-    background:
-        linear-gradient(
-            135deg,
-            #d00000,
-            #a80000
-        );
-
-    color:white;
-}
-
-
-/* LOCATION */
-
-.location-btn{
-
-    background:
-        linear-gradient(
-            135deg,
-            #1677c8,
-            #125a98
-        );
-
-    color:white;
-}
-
-
-/* EXPORT */
-
-.export-btn{
-
-    background:
-        linear-gradient(
-            135deg,
-            #1d9b61,
-            #147747
-        );
-
-    color:white;
-}
-
-
-/* CLEAR */
-
-.clear-btn{
-
-    background:
-        linear-gradient(
-            135deg,
-            #555,
-            #333
-        );
-
-    color:white;
-}
-
-
-/* =========================================================
-   STATISTICS CARD
-========================================================= */
-
-.stats{
-
-    margin-top:14px;
-
-    padding:12px;
-
-    border-radius:14px;
-
-    background:
-        rgba(255,255,255,.65);
-
-    border:
-        1px solid rgba(255,255,255,.75);
-
-    box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.9),
-        0 4px 12px rgba(0,0,0,.06);
-}
-
-
-/* =========================================================
-   STAT ROW
-========================================================= */
-
-.stat-row{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:9px 4px;
-
-    border-bottom:
-        1px solid rgba(0,0,0,.08);
-
-    font-size:12px;
-
-    color:#555;
-}
-
-
-.stat-row:last-child{
-
-    border-bottom:none;
-
-}
-
-
-/* number */
-
-.stat-row strong{
-
-    min-width:34px;
-
-    text-align:center;
-
-    padding:4px 8px;
-
-    border-radius:7px;
-
-    background:
-        rgba(196,0,0,.09);
-
-    color:#c40000;
-
-    font-size:12px;
-
-}
-
-
-/* =========================================================
-   SCROLLBAR
-========================================================= */
-
-.panel::-webkit-scrollbar{
-
-    width:6px;
-
-}
-
-
-.panel::-webkit-scrollbar-track{
-
-    background:transparent;
-
-}
-
-
-.panel::-webkit-scrollbar-thumb{
-
-    background:
-        rgba(0,0,0,.25);
-
-    border-radius:10px;
-
-}
-
-
-.panel::-webkit-scrollbar-thumb:hover{
-
-    background:
-        rgba(0,0,0,.4);
-
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:700px){
-
-    .panel{
-
-        width:calc(100% - 20px);
-
-        left:10px;
-
-        top:auto;
-
-        bottom:10px;
-
-        max-height:45vh;
-
-        border-radius:16px;
-
-    }
-
-    .panel-header{
-
-        border-radius:16px 16px 0 0;
-
-    }
-
-}
-
-/* ================= ADD MODE ================= */
-
-.add-mode{
-    position:absolute;
-    top:80px;
-    right:15px;
-    z-index:1000;
-    background:#c40000;
-    color:white;
-    padding:12px 18px;
-    border-radius:8px;
-    display:none;
-    box-shadow:0 3px 10px rgba(0,0,0,.3);
-    font-weight:bold;
-}
-
-/* ================= GPS BLUE DOT ================= */
-
-.gps-container{
-    position:relative;
-    width:24px;
-    height:24px;
-}
-
-.gps-dot{
-    position:absolute;
-    width:18px;
-    height:18px;
-    left:3px;
-    top:3px;
-    background:#1976d2;
-    border:3px solid white;
-    border-radius:50%;
-    box-shadow:
-        0 0 0 3px rgba(25,118,210,.25),
-        0 0 12px rgba(25,118,210,.8);
-    z-index:3;
-}
-
-.gps-pulse{
-    position:absolute;
-    width:18px;
-    height:18px;
-    left:-3px;
-    top:-3px;
-    background:rgba(25,118,210,.25);
-    border-radius:50%;
-    animation:gpsPulse 1.8s infinite;
-    z-index:1;
-}
-
-@keyframes gpsPulse{
-
-    0%{
-        transform:scale(1);
-        opacity:1;
-    }
-
-    70%{
-        transform:scale(2.5);
-        opacity:0;
-    }
-
-    100%{
-        transform:scale(2.5);
-        opacity:0;
-    }
-}
-
-/* ================= MODAL ================= */
-
-.modal{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:2000;
-    align-items:center;
-    justify-content:center;
-    padding:15px;
-}
-
-.modal-box{
-    background:white;
-    width:650px;
-    max-width:100%;
-    max-height:92vh;
-    overflow-y:auto;
-    border-radius:12px;
-    box-shadow:0 10px 40px rgba(0,0,0,.4);
-}
-
-.modal-header{
-    background:#c40000;
-    color:white;
-    padding:15px;
-    font-size:18px;
-    font-weight:bold;
-    display:flex;
-    justify-content:space-between;
-}
-
-.close{
-    cursor:pointer;
-    font-size:25px;
-}
-
-.form{
-    padding:18px;
-}
-
-.section-title{
-    margin-top:12px;
-    margin-bottom:8px;
-    padding-bottom:5px;
-    border-bottom:2px solid #c40000;
-    font-weight:bold;
-    color:#c40000;
-}
-
-.form-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-.form-group{
-    display:flex;
-    flex-direction:column;
-}
-
-label{
-    font-size:12px;
-    font-weight:bold;
-    margin-bottom:4px;
-}
-
-input,
-textarea{
-    width:100%;
-    padding:9px;
-    border:1px solid #ccc;
-    border-radius:6px;
-}
-
-textarea{
-    min-height:80px;
-    resize:vertical;
-}
-
-.coordinates{
-    background:#f2f2f2;
-    padding:10px;
-    border-radius:6px;
-    font-family:monospace;
-    margin-bottom:10px;
-}
-
-.gps-coordinate{
-    background:#e8f2ff;
-    border:1px solid #1976d2;
-    color:#145da0;
-}
-
-.save-area{
-    display:flex;
-    gap:10px;
-    margin-top:15px;
-}
-
-.save-area button{
-    flex:1;
-    padding:12px;
-    border:none;
-    border-radius:7px;
-    cursor:pointer;
-    font-weight:bold;
-}
-
-.save{
-    background:#198754;
-    color:white;
-}
-
-.cancel{
-    background:#777;
-    color:white;
-}
-
-/* ================= POPUP ================= */
-
-.popup-title{
-    font-size:17px;
-    font-weight:bold;
-    color:#c40000;
-    margin-bottom:6px;
-}
-
-.popup-table{
-    border-collapse:collapse;
-    width:100%;
-    font-size:12px;
-}
-
-.popup-table td{
-    padding:4px;
-    border-bottom:1px solid #eee;
-}
-
-.popup-table td:first-child{
-    font-weight:bold;
-}
-
-.popup-buttons{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:5px;
-    margin-top:8px;
-}
-
-.popup-buttons button{
-    padding:7px;
-    border:none;
-    border-radius:5px;
-    cursor:pointer;
-    font-size:11px;
-    font-weight:bold;
-}
-
-.popup-edit{
-    background:#1769aa;
-    color:white;
-}
-
-.popup-delete{
-    background:#c40000;
-    color:white;
-}
-
-.popup-google{
-    background:#198754;
-    color:white;
-}
-
-.popup-copy{
-    background:#555;
-    color:white;
-}
-
-
-/* =========================================================
-   PROFESSIONAL SITE LOCATION CARD
-========================================================= */
-
-.location-card{
-    margin-bottom:14px;
-    padding:14px;
-    border-radius:16px;
-    background:linear-gradient(135deg,rgba(255,255,255,.82),rgba(244,248,255,.62));
-    border:1px solid rgba(255,255,255,.85);
-    box-shadow:0 8px 24px rgba(0,0,0,.09),inset 0 1px 0 rgba(255,255,255,.95);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-}
-
-.location-head{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    margin-bottom:10px;
-}
-
-.location-head-left{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.location-icon{
-    width:38px;
-    height:38px;
-    border-radius:12px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:rgba(25,118,210,.11);
-    font-size:20px;
-}
-
-.location-head strong{
-    display:block;
-    color:#222;
-    font-size:13px;
-}
-
-.location-head small{
-    display:block;
-    color:#777;
-    font-size:10px;
-    margin-top:3px;
-}
-
-.location-status{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    padding:6px 8px;
-    border-radius:9px;
-    background:rgba(25,118,210,.08);
-    color:#1769aa;
-    font-size:9px;
-    font-weight:800;
-    white-space:nowrap;
-}
-
-.location-status-dot{
-    width:7px;
-    height:7px;
-    border-radius:50%;
-    background:#1976d2;
-    box-shadow:0 0 0 3px rgba(25,118,210,.13);
-}
-
-.location-status-dot.active{
-    background:#18b66a;
-    box-shadow:0 0 0 3px rgba(24,182,106,.14),0 0 8px rgba(24,182,106,.65);
-}
-
-.coord-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-}
-
-.coord-box{
-    background:rgba(255,255,255,.78);
-    border:1px solid rgba(0,0,0,.08);
-    border-radius:10px;
-    padding:9px;
-}
-
-.coord-box label{
-    display:block;
-    font-size:8px;
-    color:#777;
-    font-weight:800;
-    letter-spacing:.7px;
-    margin-bottom:4px;
-}
-
-.coord-box input{
-    width:100%;
-    padding:0;
-    border:none;
-    outline:none;
-    background:transparent;
-    font-family:Consolas,monospace;
-    font-size:11px;
-    font-weight:700;
-    color:#174f82;
-}
-
-.accuracy-row{
-    margin-top:8px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:8px 10px;
-    border-radius:9px;
-    background:rgba(0,0,0,.035);
-    font-size:10px;
-    color:#666;
-}
-
-.accuracy-row strong{
-    color:#1769aa;
-}
-
-.location-actions{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    margin-top:9px;
-}
-
-.location-actions button{
-    border:none;
-    border-radius:10px;
-    padding:10px 7px;
-    color:white;
-    cursor:pointer;
-    font-size:10px;
-    font-weight:800;
-    transition:.18s ease;
-    box-shadow:0 4px 10px rgba(0,0,0,.12);
-}
-
-.location-actions button:hover{
-    transform:translateY(-2px);
-}
-
-.use-gps{
-    background:linear-gradient(135deg,#1683d8,#075ca4);
-}
-
-.pick-map{
-    background:linear-gradient(135deg,#555,#292929);
-}
-
-.location-help{
-    margin-top:8px;
-    padding:7px 8px;
-    border-radius:8px;
-    background:rgba(255,255,255,.52);
-    color:#777;
-    font-size:9px;
-    line-height:1.35;
-    text-align:center;
-}
-
-/* Selected location marker */
-.site-pick-marker{
-    width:22px;
-    height:22px;
-    border-radius:50%;
-    background:#c40000;
-    border:3px solid white;
-    box-shadow:0 0 0 5px rgba(196,0,0,.18),0 0 15px rgba(196,0,0,.65);
-}
-
-/* Better add-mode banner */
-.add-mode{
-    background:rgba(196,0,0,.94);
-    backdrop-filter:blur(10px);
-    -webkit-backdrop-filter:blur(10px);
-    border:1px solid rgba(255,255,255,.25);
-    border-radius:12px;
-    padding:11px 16px;
-    box-shadow:0 8px 25px rgba(0,0,0,.25);
-}
-
-
-/* ================= MOBILE ================= */
-
-@media(max-width:700px){
-
-    .title{
-        font-size:14px;
-    }
-
-    .subtitle{
-        display:none;
-    }
-
-    .header{
-        padding:0 10px;
-    }
-
-    .header-buttons button{
-        padding:7px;
-        font-size:11px;
-    }
-
-    .panel{
-        width:calc(100% - 20px);
-        left:10px;
-        top:auto;
-        bottom:10px;
-        max-height:42vh;
-    }
-
-    .form-grid{
-        grid-template-columns:1fr;
-    }
-}
-
-.leaflet-popup-content{
-    margin:10px;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="ISO Yawi Telecom Site Map">
+    <meta name="author" content="ISO Yawi Telecom">
+
+    <title>ISO Yawi Telecom | Site Map</title>
+
+    <style>
+        :root {
+            --red: #e31e24;
+            --dark-red: #a80f16;
+            --navy: #10263e;
+            --white: #ffffff;
+            --light: #f2f5f9;
+            --text: #263746;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: var(--text);
+            background:
+                linear-gradient(rgba(7, 20, 35, 0.72),
+                                rgba(7, 20, 35, 0.78)),
+                url("background.jpg") center / cover fixed no-repeat;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .page-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            padding: 18px 5%;
+            color: var(--white);
+            background: rgba(8, 24, 41, 0.96);
+            border-bottom: 3px solid var(--red);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-logo {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            flex-shrink: 0;
+            border: 3px solid var(--white);
+            border-radius: 50%;
+            background: var(--red);
+            color: var(--white);
+            font-size: 17px;
+            font-weight: 900;
+        }
+
+        .brand h1 {
+            font-size: clamp(17px, 2vw, 23px);
+            letter-spacing: 0.5px;
+        }
+
+        .brand p {
+            margin-top: 5px;
+            color: #d6e0ea;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+        }
+
+        .header-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .header-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 17px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .btn-white {
+            background: var(--white);
+            color: var(--navy);
+        }
+
+        .btn-white:hover {
+            background: #dce7f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-dark {
+            background: #263f58;
+            color: var(--white);
+            border-color: #587086;
+        }
+
+        .btn-dark:hover {
+            background: #385773;
+            transform: translateY(-2px);
+        }
+
+        .logout-button {
+            background: var(--red);
+            color: var(--white);
+        }
+
+        .logout-button:hover {
+            background: var(--dark-red);
+            transform: translateY(-2px);
+        }
+
+        .header-button:focus-visible {
+            outline: 3px solid #ffc928;
+            outline-offset: 3px;
+        }
+
+        main {
+            width: min(1200px, 92%);
+            margin: 0 auto;
+            padding: 48px 0;
+        }
+
+        .welcome {
+            margin-bottom: 32px;
+            padding: 38px 30px;
+            color: var(--white);
+            text-align: center;
+            background: rgba(9, 34, 56, 0.86);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .welcome .eyebrow {
+            display: inline-block;
+            margin-bottom: 13px;
+            padding: 7px 13px;
+            color: var(--white);
+            background: var(--red);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+        }
+
+        .welcome h2 {
+            margin-bottom: 13px;
+            font-size: clamp(28px, 5vw, 43px);
+        }
+
+        .welcome p {
+            max-width: 720px;
+            margin: 0 auto;
+            color: #e0e9f1;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .section-heading {
+            margin: 35px 0 20px;
+            color: var(--white);
+            font-size: 24px;
+        }
+
+        .site-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .site-card {
+            min-height: 190px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 14px;
+            border-top: 5px solid var(--red);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .site-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        .site-icon {
+            width: 48px;
+            height: 48px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 16px;
+            background: #ffe7e8;
+            border-radius: 12px;
+            color: var(--red);
+            font-size: 25px;
+        }
+
+        .site-card h3 {
+            margin-bottom: 10px;
+            color: var(--navy);
+            font-size: 19px;
+        }
+
+        .site-card p {
+            color: #596b7b;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 6px 10px;
+            color: #176447;
+            background: #e0f6ec;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .map-panel {
+            margin-top: 32px;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+        }
+
+        .map-panel h2 {
+            margin-bottom: 10px;
+            color: var(--navy);
+        }
+
+        .map-panel p {
+            color: #596b7b;
+            line-height: 1.7;
+        }
+
+        .map-placeholder {
+            min-height: 180px;
+            display: grid;
+            place-items: center;
+            margin-top: 18px;
+            padding: 20px;
+            color: #526779;
+            text-align: center;
+            background:
+                linear-gradient(135deg, #eaf0f5, #d9e4ec);
+            border: 2px dashed #a8bac9;
+            border-radius: 12px;
+        }
+
+        .map-placeholder strong {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--navy);
+            font-size: 18px;
+        }
+
+        footer {
+            padding: 22px 5%;
+            color: #d6e0ea;
+            text-align: center;
+            background: rgba(8, 24, 41, 0.96);
+            border-top: 3px solid var(--red);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 850px) {
+            .site-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .page-header {
+                justify-content: center;
+                text-align: center;
+            }
+
+            .brand {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .header-buttons {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .header-button {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            main {
+                padding: 28px 0;
+            }
+
+            .welcome {
+                padding: 28px 18px;
+            }
+
+            .site-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .site-card {
+                min-height: auto;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
-<!-- ================= HEADER ================= -->
-
-<div class="header">
-
-    <div class="header-left">
-
-        <div class="logo">
-            PNG
+    <header class="page-header">
+        <div class="brand">
+            <div class="brand-logo" aria-label="ISO Yawi logo">ISO</div>
+            <div>
+                <h1>ISO YAWI TELECOM</h1>
+                <p>TELECOM SITE MAP</p>
+            </div>
         </div>
 
-        <div>
-
-            <div class="title">
-                PNG Digital Telecom Site Map | Iso Yawi| Tool Kit.
-            </div>
-
-            <div class="subtitle">
-                Telecom Infrastructure & Site Database
-            </div>
-
-        </div>
-
-    </div>
-
-    <div class="header-buttons">
-
-        <button class="btn-white" onclick="zoomPNG()">
-            PNG
-        </button>
-
-        <button class="btn-dark" onclick="toggleSatellite()">
-            Satellite
-        </button>
-
-    </div>
-
-</div>
-
-
-<!-- ================= MAP ================= -->
-
-<div id="map"></div>
-
-
-<!-- ================= ADD MODE ================= -->
-
-<div id="addMode" class="add-mode">
-    CLICK THE MAP TO PLACE SITE
-</div>
-
-
-<!-- ================= CONTROL PANEL ================= -->
-
-<div class="panel">
-
-    <div class="panel-header">
-        SITE MANAGEMENT
-    </div>
-
-    <div class="panel-body">
-
-        <input
-            id="searchBox"
-            class="search"
-            type="text"
-            placeholder="Search Site ID, name, TL..."
-            oninput="refreshMarkers()"
-        >
-
-        <select
-            id="provinceFilter"
-            onchange="refreshMarkers()"
-        >
-
-            <option value="">All Provinces</option>
-
-            <option>Central</option>
-            <option>Chimbu</option>
-            <option>Eastern Highlands</option>
-            <option>East New Britain</option>
-            <option>East Sepik</option>
-            <option>Enga</option>
-            <option>Gulf</option>
-            <option>Hela</option>
-            <option>Jiwaka</option>
-            <option>Madang</option>
-            <option>Manus</option>
-            <option>Milne Bay</option>
-            <option>Morobe</option>
-            <option>New Ireland</option>
-            <option>Oro</option>
-            <option>Sandaun</option>
-            <option>Southern Highlands</option>
-            <option>Western</option>
-            <option>Western Highlands</option>
-            <option>West New Britain</option>
-            <option>National Capital District</option>
-            <option>Autonomous Region of Bougainville</option>
-
-        </select>
-
-
-        <div class="action-grid">
-
-            <button
-                class="add-btn"
-                onclick="startAddSite()"
-            >
-                + ADD SITE
+        <div class="header-buttons">
+            <button type="button" class="header-button btn-white"
+                    onclick="zoomPNG()">
+                PNG
             </button>
 
-            <button
-                class="location-btn"
-                onclick="myLocation()"
-            >
-                📍 MY LOCATION
+            <button type="button" class="header-button btn-dark"
+                    onclick="toggleSatellite()">
+                Satellite
             </button>
 
-            <button
-                class="export-btn"
-                onclick="exportCSV()"
-            >
-                ↓ CSV REPORT
+            <button type="button" class="header-button logout-button"
+                    id="logoutButton">
+                &#10162; Logout
             </button>
-
-            <button
-                class="clear-btn"
-                onclick="clearAllSites()"
-            >
-                CLEAR SITES
-            </button>
-
         </div>
+    </header>
 
+    <main>
+        <section class="welcome">
+            <span class="eyebrow">WELCOME BACK</span>
+            <h2>Telecom Site Map Portal</h2>
+            <p>
+                Welcome to the ISO Yawi Telecom Site Map. Use this page
+                to access your site information and locate telecom
+                infrastructure across Papua New Guinea.
+            </p>
+        </section>
 
-        <div class="stats">
+        <h2 class="section-heading">Site Map Dashboard</h2>
 
-            <div class="stat-row">
-                <span>Total Sites</span>
-                <strong id="totalSites">0</strong>
+        <section class="site-grid" aria-label="Site map dashboard">
+            <article class="site-card">
+                <div class="site-icon" aria-hidden="true">&#127758;</div>
+                <h3>Papua New Guinea</h3>
+                <p>
+                    View the national coverage area and navigate to
+                    locations across Papua New Guinea.
+                </p>
+                <span class="status">Map access</span>
+            </article>
+
+            <article class="site-card">
+                <div class="site-icon" aria-hidden="true">&#128225;</div>
+                <h3>Telecom Sites</h3>
+                <p>
+                    Use your site-map data to locate towers, base
+                    stations and other telecom infrastructure.
+                </p>
+                <span class="status">Site information</span>
+            </article>
+
+            <article class="site-card">
+                <div class="site-icon" aria-hidden="true">&#128205;</div>
+                <h3>Site Locations</h3>
+                <p>
+                    Find the geographic locations of registered sites
+                    using your existing map and location data.
+                </p>
+                <span class="status">Location tools</span>
+            </article>
+        </section>
+
+        <section class="map-panel" id="mapPanel">
+            <h2>Interactive Site Map</h2>
+            <p>
+                Replace the placeholder below with your existing
+                interactive map, map container, site markers and
+                mapping JavaScript.
+            </p>
+
+            <div class="map-placeholder" id="mapPlaceholder">
+                <div>
+                    <strong>Map Area</strong>
+                    Your interactive telecom site map goes here.
+                </div>
             </div>
-
-            <div class="stat-row">
-                <span>4G Sites</span>
-                <strong id="fourGSites">0</strong>
-            </div>
-
-            <div class="stat-row">
-                <span>5G Sites</span>
-                <strong id="fiveGSites">0</strong>
-            </div>
-
-            <div class="stat-row">
-                <span>Fibre Sites</span>
-                <strong id="fibreSites">0</strong>
-            </div>
-
-            <div class="stat-row">
-                <span>Generator Sites</span>
-                <strong id="generatorSites">0</strong>
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ================= SITE MODAL ================= -->
-
-<div id="siteModal" class="modal">
-
-    <div class="modal-box">
-
-        <div class="modal-header">
-
-            <span id="modalTitle">
-                Add Telecom Site
-            </span>
-
-            <span
-                class="close"
-                onclick="closeModal()"
-            >
-                ×
-            </span>
-
-        </div>
-
-
-        <div class="form">
-
-            <!-- SITE LOCATION -->
-            <div class="section-title">
-                SITE LOCATION
-            </div>
-
-            <div class="location-card">
-
-                <div class="location-head">
-                    <div class="location-head-left">
-                        <div class="location-icon">📍</div>
-                        <div>
-                            <strong>Site GPS Location</strong>
-                            <small>Set the exact location of this telecom site</small>
-                        </div>
-                    </div>
-
-                    <div class="location-status">
-                        <span id="locationStatusDot" class="location-status-dot"></span>
-                        <span id="locationStatusText">READY</span>
-                    </div>
-                </div>
-
-                <div class="coord-grid">
-
-                    <div class="coord-box">
-                        <label>LATITUDE</label>
-                        <input
-                            id="siteLat"
-                            type="number"
-                            step="any"
-                            placeholder="-6.314993"
-                            oninput="syncCoordinatesFromInputs()"
-                        >
-                    </div>
-
-                    <div class="coord-box">
-                        <label>LONGITUDE</label>
-                        <input
-                            id="siteLng"
-                            type="number"
-                            step="any"
-                            placeholder="143.955550"
-                            oninput="syncCoordinatesFromInputs()"
-                        >
-                    </div>
-
-                </div>
-
-                <div class="accuracy-row">
-                    <span>GPS Accuracy</span>
-                    <strong id="siteGPSAccuracy">Not measured</strong>
-                </div>
-
-                <div class="location-actions">
-
-                    <button
-                        type="button"
-                        class="use-gps"
-                        onclick="useCurrentGPSForSite()"
-                    >
-                        📍 USE MY LOCATION
-                    </button>
-
-                    <button
-                        type="button"
-                        class="pick-map"
-                        onclick="pickSiteOnMap()"
-                    >
-                        🗺️ PICK ON MAP
-                    </button>
-
-                </div>
-
-                <div id="locationHelp" class="location-help">
-                    Use GPS for your current position or select another point on the map.
-                </div>
-
-            </div>
-
-            <div
-                id="coordinates"
-                class="coordinates gps-coordinate"
-                style="display:none"
-            ></div>
-
-
-
-            <!-- SITE INFORMATION -->
-
-            <div class="section-title">
-                SITE INFORMATION
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label>
-                        Site ID *
-                    </label>
-
-                    <input
-                        id="siteId"
-                        placeholder="e.g. LAE001"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Site Name *
-                    </label>
-
-                    <input
-                        id="siteName"
-                        placeholder="e.g. Lae Central"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Province
-                    </label>
-
-                    <select id="province">
-
-                        <option>Morobe</option>
-                        <option>Eastern Highlands</option>
-                        <option>Madang</option>
-                        <option>East Sepik</option>
-                        <option>West Sepik</option>
-                        <option>Western Highlands</option>
-                        <option>Jiwaka</option>
-                        <option>Enga</option>
-                        <option>Chimbu</option>
-                        <option>Hela</option>
-                        <option>Southern Highlands</option>
-                        <option>Western</option>
-                        <option>Gulf</option>
-                        <option>Central</option>
-                        <option>National Capital District</option>
-                        <option>Milne Bay</option>
-                        <option>Oro</option>
-                        <option>East New Britain</option>
-                        <option>West New Britain</option>
-                        <option>New Ireland</option>
-                        <option>Manus</option>
-                        <option>Autonomous Region of Bougainville</option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        District
-                    </label>
-
-                    <input
-                        id="district"
-                        placeholder="District"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Team Leader
-                    </label>
-
-                    <input
-                        id="teamLeader"
-                        placeholder="TL name"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Site Status
-                    </label>
-
-                    <select id="status">
-
-                        <option>Operational</option>
-                        <option>Down</option>
-                        <option>Maintenance</option>
-                        <option>New Site</option>
-                        <option>Decommissioned</option>
-
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <!-- TOWER -->
-
-            <div class="section-title">
-                TOWER
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label>
-                        Tower Type
-                    </label>
-
-                    <select id="towerType">
-
-                        <option>Monopole</option>
-                        <option>Self Supporting Tower</option>
-                        <option>Guyed Tower</option>
-                        <option>Rooftop</option>
-                        <option>Other</option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Tower Height
-                    </label>
-
-                    <input
-                        id="towerHeight"
-                        placeholder="e.g. 30M"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <!-- RADIO -->
-
-            <div class="section-title">
-                RADIO TECHNOLOGY
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label>2G</label>
-
-                    <select id="g2">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>3G</label>
-
-                    <select id="g3">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>4G</label>
-
-                    <select id="g4">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>5G</label>
-
-                    <select id="g5">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <!-- TRANSMISSION -->
-
-            <div class="section-title">
-                TRANSMISSION
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label>Fibre</label>
-
-                    <select id="fibre">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Microwave</label>
-
-                    <select id="microwave">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>VSAT</label>
-
-                    <select id="vsat">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-            </div>
-
-
-            <!-- POWER -->
-
-            <div class="section-title">
-                POWER SYSTEM
-            </div>
-
-            <div class="form-grid">
-
-                <div class="form-group">
-
-                    <label>PPL</label>
-
-                    <select id="ppl">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Generator</label>
-
-                    <select id="generator">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Solar</label>
-
-                    <select id="solar">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Battery</label>
-
-                    <select id="battery">
-                        <option>Yes</option>
-                        <option>No</option>
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Generator Size</label>
-
-                    <input
-                        id="generatorSize"
-                        placeholder="e.g. 60 kVA"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>Fuel Tank</label>
-
-                    <input
-                        id="fuelTank"
-                        placeholder="e.g. 500 L"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <!-- NOTES -->
-
-            <div class="section-title">
-                ADDITIONAL INFORMATION
-            </div>
-
-            <div class="form-group">
-
-                <label>
-                    Notes
-                </label>
-
-                <textarea
-                    id="notes"
-                    placeholder="Enter additional site information..."
-                ></textarea>
-
-            </div>
-
-
-            <!-- SAVE -->
-
-            <div class="save-area">
-
-                <button
-                    class="save"
-                    onclick="saveSite()"
-                >
-                    SAVE SITE
-                </button>
-
-                <button
-                    class="cancel"
-                    onclick="closeModal()"
-                >
-                    CANCEL
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- Leaflet JS -->
-
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-
-<script>
-
-/* =========================================================
-   MAP INITIALISATION
-========================================================= */
-
-const pngCenter = [-6.314993, 143.95555];
-
-const map = L.map("map", {
-    zoomControl:true
-}).setView(pngCenter, 6);
-
-
-/* STREET MAP */
-
-const streetLayer = L.tileLayer(
-    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-    {
-        maxZoom:19,
-        attribution:"&copy; OpenStreetMap contributors"
-    }
-).addTo(map);
-
-
-/* SATELLITE MAP */
-
-const satelliteLayer = L.tileLayer(
-    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-    {
-        maxZoom:19,
-        attribution:"Tiles &copy; Esri"
-    }
-);
-
-let isSatellite = false;
-
-
-function toggleSatellite(){
-
-    if(isSatellite){
-
-        map.removeLayer(satelliteLayer);
-
-        streetLayer.addTo(map);
-
-    }else{
-
-        map.removeLayer(streetLayer);
-
-        satelliteLayer.addTo(map);
-
-    }
-
-    isSatellite = !isSatellite;
-}
-
-
-function zoomPNG(){
-
-    map.setView(
-        pngCenter,
-        6
-    );
-
-}
-
-
-/* =========================================================
-   SITE DATABASE
-========================================================= */
-
-let sites =
-    JSON.parse(
-        localStorage.getItem("PNG_TELECOM_SITES")
-    ) || [];
-
-let markers = [];
-
-let addMode = false;
-
-let selectedLat = null;
-
-let selectedLng = null;
-
-let editingIndex = null;
-
-
-/* =========================================================
-   GPS VARIABLES
-========================================================= */
-
-let gpsMarker = null;
-
-let gpsAccuracyCircle = null;
-
-let gpsWatchId = null;
-
-let currentGPS = null;
-
-
-/* =========================================================
-   GPS ICON
-========================================================= */
-
-const gpsIcon = L.divIcon({
-
-    className:"",
-
-    html:`
-
-        <div class="gps-container">
-
-            <div class="gps-pulse"></div>
-
-            <div class="gps-dot"></div>
-
-        </div>
-
-    `,
-
-    iconSize:[24,24],
-
-    iconAnchor:[12,12]
-
-});
-
-
-/* =========================================================
-   SAVE DATA
-========================================================= */
-
-function saveData(){
-
-    localStorage.setItem(
-        "PNG_TELECOM_SITES",
-        JSON.stringify(sites)
-    );
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHTML(str){
-
-    if(!str){
-        return "";
-    }
-
-    return String(str).replace(
-        /[&<>"']/g,
-        function(m){
-
-            return {
-
-                "&":"&amp;",
-                "<":"&lt;",
-                ">":"&gt;",
-                '"':"&quot;",
-                "'":"&#39;"
-
-            }[m];
-
-        }
-    );
-
-}
-
-
-/* =========================================================
-   START ADD SITE
-========================================================= */
-
-function startAddSite(){
-
-    addMode = false;
-    editingIndex = null;
-    clearForm();
-
-    selectedLat = null;
-    selectedLng = null;
-
-    document.getElementById("modalTitle").innerText =
-        "Add Telecom Site";
-
-    document.getElementById("locationStatusText").innerText =
-        "GETTING GPS";
-
-    document.getElementById("locationStatusDot").classList.remove("active");
-
-    document.getElementById("siteGPSAccuracy").innerText =
-        "Searching...";
-
-    document.getElementById("locationHelp").innerHTML =
-        "Trying to obtain your current GPS location. You can also pick a point manually.";
-
-    document.getElementById("siteModal").style.display = "flex";
-
-    /* Automatically try the device GPS when Add Site is opened */
-    getGPSForNewSite();
-}
-
-
-/* =========================================================
-   MAP CLICK
-========================================================= */
-
-map.on("click", function(e){
-
-    if(!addMode){
-        return;
-    }
-
-    selectedLat = e.latlng.lat;
-    selectedLng = e.latlng.lng;
-
-    addMode = false;
-
-    document.getElementById("addMode").style.display = "none";
-
-    setSiteLocation(
-        selectedLat,
-        selectedLng,
-        "Manual map selection",
-        null
-    );
-
-    editingIndex = null;
-    clearForm();
-
-    /* Restore selected coordinates after clearForm */
-    setSiteLocation(
-        selectedLat,
-        selectedLng,
-        "Manual map selection",
-        null
-    );
-
-    document.getElementById("modalTitle").innerText =
-        "Add Telecom Site";
-
-    document.getElementById("siteModal").style.display =
-        "flex";
-});
-
-
-
-/* =========================================================
-   SITE LOCATION CONTROL
-========================================================= */
-
-let selectingSiteLocation = false;
-let selectedLocationMarker = null;
-
-const sitePickIcon = L.divIcon({
-    className:"",
-    html:'<div class="site-pick-marker"></div>',
-    iconSize:[22,22],
-    iconAnchor:[11,11]
-});
-
-
-function setSiteLocation(lat, lng, source, accuracy){
-
-    selectedLat = Number(lat);
-    selectedLng = Number(lng);
-
-    document.getElementById("siteLat").value =
-        selectedLat.toFixed(7);
-
-    document.getElementById("siteLng").value =
-        selectedLng.toFixed(7);
-
-    document.getElementById("coordinates").innerHTML =
-        "Latitude: " + selectedLat.toFixed(6) +
-        "<br>Longitude: " + selectedLng.toFixed(6);
-
-    if(accuracy !== null && accuracy !== undefined){
-
-        document.getElementById("siteGPSAccuracy").innerText =
-            "±" + Math.round(accuracy) + " m";
-
-    }else{
-
-        document.getElementById("siteGPSAccuracy").innerText =
-            "Manual";
-
-    }
-
-    document.getElementById("locationStatusText").innerText =
-        source === "GPS" ? "GPS LOCKED" : "MAP SELECTED";
-
-    document.getElementById("locationStatusDot").classList.toggle(
-        "active",
-        source === "GPS"
-    );
-
-    document.getElementById("locationHelp").innerHTML =
-        source === "GPS"
-            ? "📍 Current device GPS location captured. Review it before saving."
-            : "🗺️ Manual location selected. Review the coordinates before saving.";
-
-    /* Show a temporary red site-position marker */
-    if(selectedLocationMarker){
-        map.removeLayer(selectedLocationMarker);
-    }
-
-    selectedLocationMarker = L.marker(
-        [selectedLat, selectedLng],
-        {icon:sitePickIcon, zIndexOffset:9000}
-    ).addTo(map);
-
-    selectedLocationMarker.bindPopup(
-        "<b>NEW SITE LOCATION</b><br>" +
-        "Lat: " + selectedLat.toFixed(7) +
-        "<br>Lng: " + selectedLng.toFixed(7)
-    );
-}
-
-
-function syncCoordinatesFromInputs(){
-
-    const lat = parseFloat(
-        document.getElementById("siteLat").value
-    );
-
-    const lng = parseFloat(
-        document.getElementById("siteLng").value
-    );
-
-    if(!Number.isFinite(lat) || !Number.isFinite(lng)){
-        return;
-    }
-
-    if(lat < -90 || lat > 90 || lng < -180 || lng > 180){
-        return;
-    }
-
-    selectedLat = lat;
-    selectedLng = lng;
-
-    document.getElementById("locationStatusText").innerText =
-        "COORDINATES SET";
-
-    document.getElementById("locationStatusDot").classList.remove("active");
-
-    document.getElementById("siteGPSAccuracy").innerText =
-        "Manual";
-
-    document.getElementById("locationHelp").innerText =
-        "Coordinates entered manually. The site will be saved at this position.";
-
-    if(selectedLocationMarker){
-        selectedLocationMarker.setLatLng([lat,lng]);
-    }else{
-        selectedLocationMarker = L.marker(
-            [lat,lng],
-            {icon:sitePickIcon, zIndexOffset:9000}
-        ).addTo(map);
-    }
-}
-
-
-function getGPSForNewSite(){
-
-    if(!navigator.geolocation){
-
-        document.getElementById("locationStatusText").innerText =
-            "GPS UNAVAILABLE";
-
-        document.getElementById("siteGPSAccuracy").innerText =
-            "Unavailable";
-
-        document.getElementById("locationHelp").innerText =
-            "Your browser does not support GPS. Use PICK ON MAP.";
-
-        return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(pos){
-
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-            const accuracy = pos.coords.accuracy;
-
-            setSiteLocation(
-                lat,
-                lng,
-                "GPS",
-                accuracy
-            );
-
-            /* Move map to the captured position */
-            map.setView(
-                [lat,lng],
-                Math.max(map.getZoom(),16)
-            );
-
-        },
-
-        function(error){
-
-            console.log("New site GPS error:",error);
-
-            document.getElementById("locationStatusText").innerText =
-                "GPS NOT AVAILABLE";
-
-            document.getElementById("siteGPSAccuracy").innerText =
-                "Unavailable";
-
-            document.getElementById("locationHelp").innerHTML =
-                "GPS could not be obtained. Click <b>PICK ON MAP</b> to select the site manually.";
-
-        },
-
-        {
-            enableHighAccuracy:true,
-            timeout:30000,
-            maximumAge:0
+        </section>
+    </main>
+
+    <footer>
+        <p>
+            &copy; <span id="currentYear"></span>
+            ISO Yawi Telecom. All rights reserved.
+        </p>
+        <p>Authorized site access only.</p>
+    </footer>
+
+    <script>
+        /*
+         * SESSION CHECK
+         * The login page should set:
+         * sessionStorage.setItem("isoYawiLogin", "true");
+         */
+        (function checkLogin() {
+            if (sessionStorage.getItem("isoYawiLogin") !== "true") {
+                window.location.replace("login.html");
+            }
+        })();
+
+        /*
+         * LOGOUT
+         */
+        document.getElementById("logoutButton").addEventListener("click", function () {
+            const confirmLogout = confirm("Are you sure you want to log out?");
+
+            if (confirmLogout) {
+                sessionStorage.removeItem("isoYawiLogin");
+                window.location.replace("login.html");
+            }
+        });
+
+        /*
+         * MAP BUTTON PLACEHOLDERS
+         * Connect these functions to your existing map library
+         * if your project already uses one.
+         */
+        function zoomPNG() {
+            alert("Connect this button to your Papua New Guinea map view.");
         }
 
-    );
-}
-
-
-function useCurrentGPSForSite(){
-
-    if(!navigator.geolocation){
-
-        alert(
-            "GPS / Geolocation is not supported by this browser."
-        );
-
-        return;
-    }
-
-    document.getElementById("locationStatusText").innerText =
-        "GETTING GPS";
-
-    document.getElementById("siteGPSAccuracy").innerText =
-        "Searching...";
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(pos){
-
-            const lat = pos.coords.latitude;
-            const lng = pos.coords.longitude;
-            const accuracy = pos.coords.accuracy;
-
-            setSiteLocation(
-                lat,
-                lng,
-                "GPS",
-                accuracy
-            );
-
-            map.setView(
-                [lat,lng],
-                Math.max(map.getZoom(),17)
-            );
-
-        },
-
-        function(error){
-
-            let message = "Unable to obtain your GPS location.";
-
-            if(error.code === error.PERMISSION_DENIED){
-                message =
-                    "Location permission was denied. Allow location access in your browser and try again.";
-            }else if(error.code === error.POSITION_UNAVAILABLE){
-                message =
-                    "Your GPS position is currently unavailable.";
-            }else if(error.code === error.TIMEOUT){
-                message =
-                    "GPS request timed out. Please try again.";
-            }
-
-            document.getElementById("locationStatusText").innerText =
-                "GPS ERROR";
-
-            document.getElementById("siteGPSAccuracy").innerText =
-                "Unavailable";
-
-            document.getElementById("locationHelp").innerText =
-                message;
-
-            alert(message);
-
-        },
-
-        {
-            enableHighAccuracy:true,
-            timeout:30000,
-            maximumAge:0
+        function toggleSatellite() {
+            alert("Connect this button to your map's satellite-layer control.");
         }
 
-    );
-}
-
-
-function pickSiteOnMap(){
-
-    selectingSiteLocation = true;
-    addMode = false;
-
-    document.getElementById("siteModal").style.display =
-        "none";
-
-    document.getElementById("addMode").innerText =
-        "🗺️ CLICK THE MAP TO PLACE THE NEW SITE";
-
-    document.getElementById("addMode").style.display =
-        "block";
-
-    document.getElementById("locationHelp").innerText =
-        "Click the map to select the exact site location.";
-
-    if(selectedLocationMarker){
-        map.removeLayer(selectedLocationMarker);
-        selectedLocationMarker = null;
-    }
-}
-
-
-/* Map selection for a site location */
-map.on("click", function(e){
-
-    if(!selectingSiteLocation){
-        return;
-    }
-
-    selectingSiteLocation = false;
-
-    document.getElementById("addMode").style.display =
-        "none";
-
-    selectedLat = e.latlng.lat;
-    selectedLng = e.latlng.lng;
-
-    setSiteLocation(
-        selectedLat,
-        selectedLng,
-        "MAP",
-        null
-    );
-
-    document.getElementById("modalTitle").innerText =
-        "Add Telecom Site";
-
-    document.getElementById("siteModal").style.display =
-        "flex";
-});
-
-
-/* =========================================================
-   CLEAR FORM
-========================================================= */
-
-function clearForm(){
-
-    const fields = [
-
-        "siteId",
-        "siteName",
-        "district",
-        "teamLeader",
-        "towerHeight",
-        "generatorSize",
-        "fuelTank",
-        "notes"
-
-    ];
-
-    fields.forEach(function(id){
-
-        document.getElementById(id).value = "";
-
-    });
-
-
-    document.getElementById(
-        "province"
-    ).value = "Morobe";
-
-
-    document.getElementById(
-        "status"
-    ).value = "Operational";
-
-
-    document.getElementById(
-        "towerType"
-    ).value = "Monopole";
-
-
-    [
-
-        "g2",
-        "g3",
-        "g4",
-        "g5",
-        "fibre",
-        "microwave",
-        "vsat",
-        "ppl",
-        "generator",
-        "solar",
-        "battery"
-
-    ].forEach(function(id){
-
-        document.getElementById(id).value = "No";
-
-    });
-
-}
-
-
-/* =========================================================
-   SAVE SITE
-========================================================= */
-
-function saveSite(){
-
-    const siteId =
-        document.getElementById(
-            "siteId"
-        ).value.trim();
-
-
-    const siteName =
-        document.getElementById(
-            "siteName"
-        ).value.trim();
-
-
-    if(!siteId){
-
-        alert(
-            "Please enter Site ID."
-        );
-
-        return;
-    }
-
-
-    if(!siteName){
-
-        alert(
-            "Please enter Site Name."
-        );
-
-        return;
-    }
-
-    /* Read the final coordinates from the location card */
-    syncCoordinatesFromInputs();
-
-    if(
-        selectedLat === null ||
-        selectedLng === null ||
-        !Number.isFinite(Number(selectedLat)) ||
-        !Number.isFinite(Number(selectedLng))
-    ){
-
-        alert(
-            "Please set the site location using GPS or PICK ON MAP."
-        );
-
-        return;
-    }
-
-    if(
-        Number(selectedLat) < -90 ||
-        Number(selectedLat) > 90 ||
-        Number(selectedLng) < -180 ||
-        Number(selectedLng) > 180
-    ){
-
-        alert(
-            "The GPS coordinates are invalid."
-        );
-
-        return;
-    }
-
-
-    const site = {
-
-        id:siteId,
-
-        name:siteName,
-
-        province:
-            document.getElementById(
-                "province"
-            ).value,
-
-        district:
-            document.getElementById(
-                "district"
-            ).value,
-
-        teamLeader:
-            document.getElementById(
-                "teamLeader"
-            ).value,
-
-        status:
-            document.getElementById(
-                "status"
-            ).value,
-
-        towerType:
-            document.getElementById(
-                "towerType"
-            ).value,
-
-        towerHeight:
-            document.getElementById(
-                "towerHeight"
-            ).value,
-
-        g2:
-            document.getElementById(
-                "g2"
-            ).value,
-
-        g3:
-            document.getElementById(
-                "g3"
-            ).value,
-
-        g4:
-            document.getElementById(
-                "g4"
-            ).value,
-
-        g5:
-            document.getElementById(
-                "g5"
-            ).value,
-
-        fibre:
-            document.getElementById(
-                "fibre"
-            ).value,
-
-        microwave:
-            document.getElementById(
-                "microwave"
-            ).value,
-
-        vsat:
-            document.getElementById(
-                "vsat"
-            ).value,
-
-        ppl:
-            document.getElementById(
-                "ppl"
-            ).value,
-
-        generator:
-            document.getElementById(
-                "generator"
-            ).value,
-
-        solar:
-            document.getElementById(
-                "solar"
-            ).value,
-
-        battery:
-            document.getElementById(
-                "battery"
-            ).value,
-
-        generatorSize:
-            document.getElementById(
-                "generatorSize"
-            ).value,
-
-        fuelTank:
-            document.getElementById(
-                "fuelTank"
-            ).value,
-
-        notes:
-            document.getElementById(
-                "notes"
-            ).value,
-
-        lat:selectedLat,
-
-        lng:selectedLng,
-
-        created:
-            new Date().toISOString()
-
-    };
-
-
-    if(editingIndex === null){
-
-        sites.push(site);
-
-    }else{
-
-        sites[editingIndex] = site;
-
-    }
-
-
-    saveData();
-
-    refreshMarkers();
-
-    closeModal();
-
-}
-
-
-/* =========================================================
-   CLOSE MODAL
-========================================================= */
-
-function closeModal(){
-
-    document.getElementById(
-        "siteModal"
-    ).style.display = "none";
-
-}
-
-
-/* =========================================================
-   REFRESH MARKERS
-========================================================= */
-
-function refreshMarkers(){
-
-    markers.forEach(function(m){
-
-        map.removeLayer(m);
-
-    });
-
-    markers = [];
-
-
-    const searchVal =
-        document.getElementById(
-            "searchBox"
-        ).value.toLowerCase();
-
-
-    const provVal =
-        document.getElementById(
-            "provinceFilter"
-        ).value;
-
-
-    let c4g = 0;
-
-    let c5g = 0;
-
-    let cFibre = 0;
-
-    let cGen = 0;
-
-    let total = 0;
-
-
-    sites.forEach(function(site, idx){
-
-        const matchesSearch =
-
-            !searchVal ||
-
-            String(site.id)
-                .toLowerCase()
-                .includes(searchVal) ||
-
-            String(site.name)
-                .toLowerCase()
-                .includes(searchVal) ||
-
-            String(site.teamLeader)
-                .toLowerCase()
-                .includes(searchVal);
-
-
-        const matchesProv =
-
-            !provVal ||
-
-            site.province === provVal;
-
-
-        if(
-            matchesSearch &&
-            matchesProv
-        ){
-
-            createMarker(
-                site,
-                idx
-            );
-
-            total++;
-
-
-            if(site.g4 === "Yes"){
-                c4g++;
-            }
-
-
-            if(site.g5 === "Yes"){
-                c5g++;
-            }
-
-
-            if(site.fibre === "Yes"){
-                cFibre++;
-            }
-
-
-            if(site.generator === "Yes"){
-                cGen++;
-            }
-
-        }
-
-    });
-
-
-    document.getElementById(
-        "totalSites"
-    ).innerText = total;
-
-
-    document.getElementById(
-        "fourGSites"
-    ).innerText = c4g;
-
-
-    document.getElementById(
-        "fiveGSites"
-    ).innerText = c5g;
-
-
-    document.getElementById(
-        "fibreSites"
-    ).innerText = cFibre;
-
-
-    document.getElementById(
-        "generatorSites"
-    ).innerText = cGen;
-
-}
-
-
-/* =========================================================
-   CREATE SITE MARKER
-========================================================= */
-
-function createMarker(
-    site,
-    index
-){
-
-    const marker =
-        L.marker([
-            site.lat,
-            site.lng
-        ]);
-
-
-    marker.bindPopup(
-        createPopup(
-            site,
-            index
-        )
-    );
-
-
-    marker.addTo(map);
-
-    markers.push(marker);
-
-}
-
-
-/* =========================================================
-   CREATE SITE POPUP
-========================================================= */
-
-function createPopup(
-    site,
-    index
-){
-
-    return `
-
-        <div style="min-width:260px">
-
-            <div class="popup-title">
-
-                ${escapeHTML(site.id)}
-
-            </div>
-
-
-            <strong>
-
-                ${escapeHTML(site.name)}
-
-            </strong>
-
-            <br><br>
-
-
-            <table class="popup-table">
-
-                <tr>
-                    <td>Province</td>
-                    <td>${escapeHTML(site.province)}</td>
-                </tr>
-
-                <tr>
-                    <td>District</td>
-                    <td>${escapeHTML(site.district)}</td>
-                </tr>
-
-                <tr>
-                    <td>TL</td>
-                    <td>${escapeHTML(site.teamLeader)}</td>
-                </tr>
-
-                <tr>
-                    <td>Status</td>
-                    <td>${escapeHTML(site.status)}</td>
-                </tr>
-
-                <tr>
-                    <td>Tower</td>
-                    <td>
-                        ${escapeHTML(site.towerType)}
-                        /
-                        ${escapeHTML(site.towerHeight)}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>4G</td>
-                    <td>${site.g4}</td>
-                </tr>
-
-                <tr>
-                    <td>5G</td>
-                    <td>${site.g5}</td>
-                </tr>
-
-                <tr>
-                    <td>Fibre</td>
-                    <td>${site.fibre}</td>
-                </tr>
-
-                <tr>
-                    <td>Microwave</td>
-                    <td>${site.microwave}</td>
-                </tr>
-
-                <tr>
-                    <td>VSAT</td>
-                    <td>${site.vsat}</td>
-                </tr>
-
-                <tr>
-                    <td>PPL</td>
-                    <td>${site.ppl}</td>
-                </tr>
-
-                <tr>
-                    <td>Generator</td>
-                    <td>
-                        ${site.generator}
-                        ${escapeHTML(site.generatorSize)}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>Fuel Tank</td>
-                    <td>
-                        ${escapeHTML(site.fuelTank)}
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>GPS</td>
-                    <td>
-                        ${Number(site.lat).toFixed(6)},
-                        ${Number(site.lng).toFixed(6)}
-                    </td>
-                </tr>
-
-            </table>
-
-
-            <div class="popup-buttons">
-
-                <button
-                    class="popup-edit"
-                    onclick="editSite(${index})"
-                >
-                    EDIT
-                </button>
-
-
-                <button
-                    class="popup-delete"
-                    onclick="deleteSite(${index})"
-                >
-                    DELETE
-                </button>
-
-
-                <button
-                    class="popup-google"
-                    onclick="
-                        openGoogleMaps(
-                            ${site.lat},
-                            ${site.lng}
-                        )
-                    "
-                >
-                    GOOGLE MAPS
-                </button>
-
-
-                <button
-                    class="popup-copy"
-                    onclick="
-                        copyGPS(
-                            ${site.lat},
-                            ${site.lng}
-                        )
-                    "
-                >
-                    COPY GPS
-                </button>
-
-            </div>
-
-        </div>
-
-    `;
-
-}
-
-
-/* =========================================================
-   EDIT SITE
-========================================================= */
-
-function editSite(index){
-
-    const site = sites[index];
-
-    editingIndex = index;
-
-    selectedLat = site.lat;
-
-    selectedLng = site.lng;
-
-
-    document.getElementById(
-        "siteId"
-    ).value = site.id;
-
-
-    document.getElementById(
-        "siteName"
-    ).value = site.name;
-
-
-    document.getElementById(
-        "province"
-    ).value = site.province;
-
-
-    document.getElementById(
-        "district"
-    ).value = site.district;
-
-
-    document.getElementById(
-        "teamLeader"
-    ).value = site.teamLeader;
-
-
-    document.getElementById(
-        "status"
-    ).value = site.status;
-
-
-    document.getElementById(
-        "towerType"
-    ).value = site.towerType;
-
-
-    document.getElementById(
-        "towerHeight"
-    ).value = site.towerHeight;
-
-
-    document.getElementById(
-        "g2"
-    ).value = site.g2;
-
-
-    document.getElementById(
-        "g3"
-    ).value = site.g3;
-
-
-    document.getElementById(
-        "g4"
-    ).value = site.g4;
-
-
-    document.getElementById(
-        "g5"
-    ).value = site.g5;
-
-
-    document.getElementById(
-        "fibre"
-    ).value = site.fibre;
-
-
-    document.getElementById(
-        "microwave"
-    ).value = site.microwave;
-
-
-    document.getElementById(
-        "vsat"
-    ).value = site.vsat;
-
-
-    document.getElementById(
-        "ppl"
-    ).value = site.ppl;
-
-
-    document.getElementById(
-        "generator"
-    ).value = site.generator;
-
-
-    document.getElementById(
-        "solar"
-    ).value = site.solar;
-
-
-    document.getElementById(
-        "battery"
-    ).value = site.battery;
-
-
-    document.getElementById(
-        "generatorSize"
-    ).value = site.generatorSize;
-
-
-    document.getElementById(
-        "fuelTank"
-    ).value = site.fuelTank;
-
-
-    document.getElementById(
-        "notes"
-    ).value = site.notes;
-
-
-    setSiteLocation(
-        selectedLat,
-        selectedLng,
-        "MAP",
-        null
-    );
-
-
-    document.getElementById(
-        "modalTitle"
-    ).innerText =
-        "Edit Telecom Site";
-
-
-    document.getElementById(
-        "siteModal"
-    ).style.display = "flex";
-
-}
-
-
-/* =========================================================
-   DELETE SITE
-========================================================= */
-
-function deleteSite(index){
-
-    if(
-        confirm(
-            "Are you sure you want to delete this site?"
-        )
-    ){
-
-        sites.splice(
-            index,
-            1
-        );
-
-        saveData();
-
-        refreshMarkers();
-
-    }
-
-}
-
-
-/* =========================================================
-   GOOGLE MAPS
-========================================================= */
-
-function openGoogleMaps(
-    lat,
-    lng
-){
-
-    window.open(
-        `https://www.google.com/maps?q=${lat},${lng}`,
-        "_blank"
-    );
-
-}
-
-
-/* =========================================================
-   COPY GPS
-========================================================= */
-
-function copyGPS(
-    lat,
-    lng
-){
-
-    const coordinates =
-        `${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`;
-
-
-    if(
-        navigator.clipboard &&
-        navigator.clipboard.writeText
-    ){
-
-        navigator.clipboard.writeText(
-            coordinates
-        );
-
-        alert(
-            "Coordinates copied to clipboard!"
-        );
-
-    }else{
-
-        prompt(
-            "Copy GPS coordinates:",
-            coordinates
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   MY LOCATION
-========================================================= */
-
-function myLocation(){
-
-    if(!navigator.geolocation){
-
-        alert(
-            "GPS / Geolocation is not supported by this browser."
-        );
-
-        return;
-    }
-
-
-    navigator.geolocation.getCurrentPosition(
-
-        function(pos){
-
-            const lat =
-                pos.coords.latitude;
-
-            const lng =
-                pos.coords.longitude;
-
-            const accuracy =
-                pos.coords.accuracy;
-
-
-            currentGPS = {
-
-                lat:lat,
-
-                lng:lng,
-
-                accuracy:accuracy
-
-            };
-
-
-            /* REMOVE OLD GPS MARKER */
-
-            if(gpsMarker){
-
-                map.removeLayer(
-                    gpsMarker
-                );
-
-            }
-
-
-            if(gpsAccuracyCircle){
-
-                map.removeLayer(
-                    gpsAccuracyCircle
-                );
-
-            }
-
-
-            /* BLUE GPS DOT */
-
-            gpsMarker = L.marker(
-
-                [
-                    lat,
-                    lng
-                ],
-
-                {
-                    icon:gpsIcon,
-
-                    zIndexOffset:10000
-                }
-
-            ).addTo(map);
-
-
-            /* ACCURACY CIRCLE */
-
-            gpsAccuracyCircle =
-                L.circle(
-
-                    [
-                        lat,
-                        lng
-                    ],
-
-                    {
-
-                        radius:accuracy,
-
-                        color:"#1976d2",
-
-                        fillColor:"#1976d2",
-
-                        fillOpacity:0.12,
-
-                        weight:2
-
-                    }
-
-                ).addTo(map);
-
-
-            /* GPS POPUP */
-
-            gpsMarker.bindPopup(`
-
-                <div style="
-                    min-width:220px;
-                    text-align:center;
-                ">
-
-                    <strong style="
-                        color:#1976d2;
-                        font-size:15px;
-                    ">
-
-                        📍 YOUR GPS LOCATION
-
-                    </strong>
-
-                    <hr>
-
-                    <b>Latitude:</b><br>
-
-                    ${lat.toFixed(6)}
-
-                    <br><br>
-
-                    <b>Longitude:</b><br>
-
-                    ${lng.toFixed(6)}
-
-                    <br><br>
-
-                    <b>GPS Accuracy:</b><br>
-
-                    ±${Math.round(accuracy)} metres
-
-                    <br><br>
-
-                    <button
-                        onclick="plotSiteAtGPS()"
-                        style="
-                            background:#c40000;
-                            color:white;
-                            border:none;
-                            padding:10px 15px;
-                            border-radius:6px;
-                            font-weight:bold;
-                            cursor:pointer;
-                        "
-                    >
-
-                        + PLOT SITE HERE
-
-                    </button>
-
-                </div>
-
-            `);
-
-
-            gpsMarker.openPopup();
-
-
-            /* MOVE MAP TO USER */
-
-            map.setView(
-                [
-                    lat,
-                    lng
-                ],
-                18
-            );
-
-
-            console.log(
-                "GPS Latitude:",
-                lat
-            );
-
-            console.log(
-                "GPS Longitude:",
-                lng
-            );
-
-            console.log(
-                "GPS Accuracy:",
-                accuracy,
-                "metres"
-            );
-
-
-            /* START WATCHING LOCATION */
-
-            startGPSWatch();
-
-        },
-
-
-        function(error){
-
-            let message = "";
-
-
-            switch(error.code){
-
-                case error.PERMISSION_DENIED:
-
-                    message =
-                        "Location permission was denied.\n\n" +
-                        "Please allow location access in your browser and try again.";
-
-                    break;
-
-
-                case error.POSITION_UNAVAILABLE:
-
-                    message =
-                        "Your GPS position is currently unavailable.";
-
-                    break;
-
-
-                case error.TIMEOUT:
-
-                    message =
-                        "GPS request timed out.\n\n" +
-                        "Please try again.";
-
-                    break;
-
-
-                default:
-
-                    message =
-                        "Unable to determine your GPS location.";
-
-            }
-
-
-            alert(message);
-
-        },
-
-
-        {
-
-            enableHighAccuracy:true,
-
-            timeout:30000,
-
-            maximumAge:0
-
-        }
-
-    );
-
-}
-
-
-/* =========================================================
-   CONTINUOUS GPS WATCH
-========================================================= */
-
-function startGPSWatch(){
-
-    if(!navigator.geolocation){
-        return;
-    }
-
-
-    if(gpsWatchId !== null){
-
-        navigator.geolocation.clearWatch(
-            gpsWatchId
-        );
-
-    }
-
-
-    gpsWatchId =
-        navigator.geolocation.watchPosition(
-
-            function(pos){
-
-                const lat =
-                    pos.coords.latitude;
-
-                const lng =
-                    pos.coords.longitude;
-
-                const accuracy =
-                    pos.coords.accuracy;
-
-
-                currentGPS = {
-
-                    lat:lat,
-
-                    lng:lng,
-
-                    accuracy:accuracy
-
-                };
-
-
-                /* UPDATE BLUE DOT */
-
-                if(gpsMarker){
-
-                    gpsMarker.setLatLng([
-                        lat,
-                        lng
-                    ]);
-
-                }else{
-
-                    gpsMarker =
-                        L.marker(
-
-                            [
-                                lat,
-                                lng
-                            ],
-
-                            {
-                                icon:gpsIcon,
-                                zIndexOffset:10000
-                            }
-
-                        ).addTo(map);
-
-                }
-
-
-                /* UPDATE ACCURACY CIRCLE */
-
-                if(gpsAccuracyCircle){
-
-                    gpsAccuracyCircle.setLatLng([
-                        lat,
-                        lng
-                    ]);
-
-                    gpsAccuracyCircle.setRadius(
-                        accuracy
-                    );
-
-                }
-
-
-                /* UPDATE POPUP */
-
-                if(gpsMarker){
-
-                    gpsMarker.bindPopup(`
-
-                        <div style="
-                            min-width:220px;
-                            text-align:center;
-                        ">
-
-                            <strong style="
-                                color:#1976d2;
-                                font-size:15px;
-                            ">
-
-                                📍 YOUR GPS LOCATION
-
-                            </strong>
-
-                            <hr>
-
-                            <b>Latitude:</b><br>
-
-                            ${lat.toFixed(6)}
-
-                            <br><br>
-
-                            <b>Longitude:</b><br>
-
-                            ${lng.toFixed(6)}
-
-                            <br><br>
-
-                            <b>GPS Accuracy:</b><br>
-
-                            ±${Math.round(accuracy)}
-                            metres
-
-                            <br><br>
-
-                            <button
-                                onclick="plotSiteAtGPS()"
-                                style="
-                                    background:#c40000;
-                                    color:white;
-                                    border:none;
-                                    padding:10px 15px;
-                                    border-radius:6px;
-                                    font-weight:bold;
-                                    cursor:pointer;
-                                "
-                            >
-
-                                + PLOT SITE HERE
-
-                            </button>
-
-                        </div>
-
-                    `);
-
-                }
-
-            },
-
-
-            function(error){
-
-                console.log(
-                    "GPS watch error:",
-                    error.message
-                );
-
-            },
-
-
-            {
-
-                enableHighAccuracy:true,
-
-                maximumAge:2000,
-
-                timeout:10000
-
-            }
-
-        );
-
-}
-
-
-/* =========================================================
-   PLOT SITE DIRECTLY AT GPS
-========================================================= */
-
-function plotSiteAtGPS(){
-
-    if(!currentGPS){
-
-        alert(
-            "GPS location has not been obtained yet.\n\n" +
-            "Press MY LOCATION first."
-        );
-
-        return;
-    }
-
-    editingIndex = null;
-    clearForm();
-
-    setSiteLocation(
-        currentGPS.lat,
-        currentGPS.lng,
-        "GPS",
-        currentGPS.accuracy
-    );
-
-    document.getElementById("modalTitle").innerText =
-        "Add Telecom Site at GPS Location";
-
-    document.getElementById("siteModal").style.display =
-        "flex";
-
-    map.setView(
-        [currentGPS.lat,currentGPS.lng],
-        Math.max(map.getZoom(),17)
-    );
-
-    if(gpsMarker){
-        gpsMarker.closePopup();
-    }
-}
-
-
-/* =========================================================
-   EXPORT CSV
-========================================================= */
-
-function exportCSV(){
-
-    if(sites.length === 0){
-
-        alert(
-            "No sites to export."
-        );
-
-        return;
-    }
-
-
-    let csv =
-        "ID,Name,Province,District,TL,Status,Lat,Lng,4G,5G,Fibre,Microwave,VSAT,PPL,Generator,Solar,Battery,Tower Type,Tower Height,Generator Size,Fuel Tank,Notes\n";
-
-
-    sites.forEach(function(s){
-
-        csv +=
-
-            `"${String(s.id).replace(/"/g,'""')}",` +
-
-            `"${String(s.name).replace(/"/g,'""')}",` +
-
-            `"${String(s.province).replace(/"/g,'""')}",` +
-
-            `"${String(s.district).replace(/"/g,'""')}",` +
-
-            `"${String(s.teamLeader).replace(/"/g,'""')}",` +
-
-            `"${String(s.status).replace(/"/g,'""')}",` +
-
-            `${s.lat},` +
-
-            `${s.lng},` +
-
-            `"${s.g4}",` +
-
-            `"${s.g5}",` +
-
-            `"${s.fibre}",` +
-
-            `"${s.microwave}",` +
-
-            `"${s.vsat}",` +
-
-            `"${s.ppl}",` +
-
-            `"${s.generator}",` +
-
-            `"${s.solar}",` +
-
-            `"${s.battery}",` +
-
-            `"${String(s.towerType).replace(/"/g,'""')}",` +
-
-            `"${String(s.towerHeight).replace(/"/g,'""')}",` +
-
-            `"${String(s.generatorSize).replace(/"/g,'""')}",` +
-
-            `"${String(s.fuelTank).replace(/"/g,'""')}",` +
-
-            `"${String(s.notes).replace(/"/g,'""')}"\n`;
-
-    });
-
-
-    const blob =
-        new Blob(
-            [csv],
-            {
-                type:"text/csv;charset=utf-8;"
-            }
-        );
-
-
-    const url =
-        window.URL.createObjectURL(
-            blob
-        );
-
-
-    const a =
-        document.createElement(
-            "a"
-        );
-
-
-    a.href = url;
-
-    a.download =
-        "png_telecom_sites.csv";
-
-
-    document.body.appendChild(a);
-
-    a.click();
-
-    document.body.removeChild(a);
-
-    window.URL.revokeObjectURL(url);
-
-}
-
-
-/* =========================================================
-   CLEAR ALL SITES
-========================================================= */
-
-function clearAllSites(){
-
-    if(
-        confirm(
-            "Clear all site data from memory?"
-        )
-    ){
-
-        sites = [];
-
-        saveData();
-
-        refreshMarkers();
-
-    }
-
-}
-
-
-/* =========================================================
-   INITIAL RENDER
-========================================================= */
-
-refreshMarkers();
-
-</script>
-
+        /*
+         * FOOTER YEAR
+         */
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+    </script>
 </body>
 </html>
