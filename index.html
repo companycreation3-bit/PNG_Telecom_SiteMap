@@ -24,16 +24,22 @@
             --text-light: #f3f4f6;
         }
 
+        /* BODY AND BACKGROUND */
         body {
             font-family: Arial, Helvetica, sans-serif;
             min-height: 100vh;
+
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 25px;
+
+            /* MOVE LOGIN CONTAINER TO THE RIGHT */
+            justify-content: flex-end;
+
+            padding: 25px 7% 25px 25px;
+
             color: var(--white);
 
-            /* YOUR BACKGROUND IMAGE */
+            /* YOUR ORIGINAL BACKGROUND IMAGE */
             background:
                 linear-gradient(
                     135deg,
@@ -48,22 +54,16 @@
             background-attachment: fixed;
         }
 
-        /* MAIN CONTAINER */
+        /* MAIN LOGIN CONTAINER */
         .login-container {
             width: 100%;
             max-width: 430px;
             position: relative;
-            margine-right: auto;
-            margine-left: 3%;
+            margin-left: auto;
+            margin-right: 0;
+            flex-shrink: 0;
+        }
 
-            /* Keep the login centered on mobile */
-            @media (max-width: 480px) {
-                .login-container { 
-                    margin-left: auto; 
-                    margin-right: auto;
-                    } 
-                }
-      
         /* GLASS LOGIN CARD */
         .login-card {
             position: relative;
@@ -276,6 +276,7 @@
 
         .login-button:hover {
             transform: translateY(-2px);
+
             background: linear-gradient(
                 135deg,
                 #f02b31,
@@ -332,11 +333,32 @@
             color: rgba(255, 255, 255, 0.48);
         }
 
+        /* TABLETS */
+        @media (max-width: 768px) and (min-width: 481px) {
+            body {
+                padding: 25px 4%;
+            }
+
+            .login-container {
+                max-width: 400px;
+            }
+        }
+
         /* MOBILE */
         @media (max-width: 480px) {
             body {
                 padding: 16px;
                 background-attachment: scroll;
+
+                /* KEEP LOGIN CENTERED ON MOBILE */
+                justify-content: center;
+            }
+
+            .login-container {
+                width: 100%;
+                max-width: 430px;
+                margin-left: auto;
+                margin-right: auto;
             }
 
             .login-card {
